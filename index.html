@@ -13,11 +13,13 @@
     <meta name="apple-mobile-web-app-title" content="EdzésNapló">
 
     <style>
+        * { box-sizing: border-box; }
+
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
             background: url('hatter.png') no-repeat center center fixed; 
             background-size: cover; 
-            margin: 0; padding: 20px; 
+            margin: 0; padding: 15px; 
             display: flex; flex-direction: column; align-items: center; 
             min-height: 100vh; 
         }
@@ -28,12 +30,11 @@
             -webkit-backdrop-filter: blur(15px);
             padding: 20px; border-radius: 25px; 
             box-shadow: 0 10px 40px rgba(0,0,0,0.2); 
-            width: 95%; max-width: 500px; 
+            width: 100%; max-width: 500px; 
             border: 1px solid rgba(255, 255, 255, 0.3);
-            box-sizing: border-box;
         }
 
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tabs { display: flex; gap: 8px; margin-bottom: 20px; }
         .tab-btn { flex: 1; padding: 12px; border-radius: 12px; border: none; background: rgba(255,255,255,0.4); cursor: pointer; font-weight: bold; font-size: 14px; }
         .tab-btn.active { background: #007aff; color: white; }
 
@@ -41,31 +42,40 @@
             background: rgba(255, 255, 255, 0.6); 
             padding: 15px; border-radius: 15px; 
             margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.4); 
-            position: relative; 
         }
         
-        h3 { margin: 0 0 10px 0; color: #1c1c1e; font-size: 18px; }
-        input, select { padding: 10px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.1); font-size: 14px; margin-bottom: 10px; width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.8); }
-        
-        .exercise-block { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid rgba(0,0,0,0.05); }
-        .exercise-name { font-weight: bold; font-size: 15px; color: #007aff; display: block; margin-bottom: 5px; }
-        .exercise-row { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; }
-        .set-input { padding: 8px; text-align: center; font-size: 13px; margin-bottom: 0; }
+        input, select { 
+            padding: 12px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.1); 
+            font-size: 16px; margin-bottom: 10px; width: 100%; 
+            background: rgba(255,255,255,0.8); 
+            display: block;
+        }
 
-        .btn-primary { background: #007aff; color: white; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: bold; cursor: pointer; font-size: 16px; }
+        .weight-input-group { display: flex; flex-direction: column; gap: 5px; }
+
+        @media (min-width: 400px) {
+            .weight-input-group { flex-direction: row; align-items: flex-start; }
+            .weight-input-group input[type="date"] { flex: 2; }
+            .weight-input-group input[type="number"] { flex: 1; }
+            .weight-input-group .btn-ok { width: auto; height: 44px; margin-top: 0; }
+        }
+
+        /* GYAKORLAT BLOKK JAVÍTVA */
+        .exercise-block { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid rgba(0,0,0,0.05); position: relative; }
+        .exercise-name { font-weight: bold; font-size: 15px; color: #007aff; display: block; margin-bottom: 8px; width: 85%; outline: none; }
+        .exercise-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+        .set-input { padding: 8px; text-align: center; font-size: 12px; margin-bottom: 0; }
+
+        .btn-primary { background: #007aff; color: white; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 5px; }
+        .btn-add-ex { background: #34c759; color: white; border: none; padding: 10px; border-radius: 10px; width: 100%; font-weight: bold; cursor: pointer; font-size: 14px; margin-bottom: 10px; }
         .btn-delete { background: none; border: none; color: #ff3b30; cursor: pointer; font-size: 18px; padding: 5px; }
-        .btn-search { background: rgba(0,0,0,0.1); color: #333; border: none; padding: 10px; border-radius: 8px; margin-bottom: 15px; width: 100%; font-weight: bold; }
+        .remove-ex { position: absolute; right: 0; top: 0; color: #ff3b30; font-weight: bold; cursor: pointer; padding: 5px; font-size: 20px; }
 
-        .history-card { border-left: 5px solid #007aff; }
-        .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .weight-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
-        
-        .avg-week { padding: 8px; background: rgba(52, 199, 89, 0.15); border-radius: 8px; margin: 8px 0; font-weight: bold; color: #248a3d; font-size: 13px; text-align: center; border: 1px dashed #34c759; }
-        .avg-month { padding: 10px; background: rgba(0, 122, 255, 0.15); border-radius: 8px; margin: 10px 0; font-weight: bold; color: #007aff; font-size: 14px; text-align: center; border: 1px solid #007aff; }
+        .avg-week { padding: 10px; background: rgba(52, 199, 89, 0.15); border-radius: 10px; margin: 10px 0; font-weight: bold; color: #248a3d; font-size: 13px; text-align: center; border: 1px dashed #34c759; }
+        .avg-month { padding: 12px; background: rgba(0, 122, 255, 0.15); border-radius: 10px; margin: 15px 0 5px 0; font-weight: bold; color: #007aff; font-size: 14px; text-align: center; border: 1px solid #007aff; }
 
+        .weight-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
         .hidden { display: none; }
-        .search-box { background: rgba(255,255,255,0.3); padding: 10px; border-radius: 10px; margin-bottom: 15px; }
-        .day-label { font-size: 12px; color: #666; font-weight: normal; }
     </style>
 </head>
 <body>
@@ -78,36 +88,31 @@
 
     <div id="tab-workout">
         <div class="card">
-            <h3>Új Edzés Rögzítése</h3>
+            <h3>Új Edzés</h3>
             <input type="date" id="workoutDate">
             <select id="workoutType" onchange="loadTemplate()">
-                <option value="">-- Válassz típust --</option>
+                <option value="">-- Sablon --</option>
                 <option value="felso">Felsőtest</option>
                 <option value="also">Alsótest</option>
+                <option value="egyedi">Egyedi (Üres)</option>
             </select>
             <div id="exercise-container"></div>
-            <button class="btn-primary" onclick="saveWorkout()">Edzés Mentése</button>
+            <button id="add-custom-btn" class="btn-add-ex hidden" onclick="addCustomExercise()">+ Gyakorlat hozzáadása</button>
+            <button class="btn-primary" onclick="saveWorkout()">Mentés</button>
         </div>
-        
-        <div class="search-box">
-            <input type="date" id="searchDate" onchange="filterWorkouts()">
-            <button class="btn-search" onclick="clearSearch()">Minden előzmény</button>
-        </div>
-
         <div id="history-container"></div>
     </div>
 
     <div id="tab-weight" class="hidden">
         <div class="card">
-            <h3>Testsúly Napló</h3>
-            <div style="display: flex; gap: 10px;">
-                <input type="date" id="weightDate" style="flex: 2;">
-                <input type="number" id="weightInput" step="0.1" placeholder="kg" style="flex: 1;">
-                <button class="btn-primary" style="padding: 10px; width: auto;" onclick="saveWeight()">OK</button>
+            <h3>Testsúly</h3>
+            <div class="weight-input-group">
+                <input type="date" id="weightDate">
+                <input type="number" id="weightInput" step="0.1" placeholder="kg">
+                <button class="btn-primary btn-ok" onclick="saveWeight()">OK</button>
             </div>
         </div>
         <div class="card">
-            <h3>Napló & Statisztika</h3>
             <div id="weightEntries"></div>
         </div>
     </div>
@@ -129,71 +134,79 @@
 
     const templates = {
         felso: ["Melltámaszos evezés", "Mellhez húzás", "Fekvenyomó gép", "Vállból nyomó gép", "Oldalemelés", "Bicepsz", "Tricepsz"],
-        also: ["Lábtoló", "Combfeszítő", "Combhajlító", "Combközelítő", "Hip Thrust", "Vádli"]
+        also: ["Lábtoló", "Combfeszítő", "Combhajlító", "Combközelítő", "Hip Thrust", "Vádli"],
+        egyedi: []
     };
 
     const napok = ["Vasárnap", "Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek", "Szombat"];
 
-    function getWeekId(dateStr) {
-        const d = new Date(dateStr);
-        d.setHours(0, 0, 0, 0);
-        d.setDate(d.getDate() + 4 - (d.getDay() || 7));
-        const yearStart = new Date(d.getFullYear(), 0, 1);
-        return d.getFullYear() + "-W" + Math.ceil((((d - yearStart) / 86400000) + 1) / 7);
+    // --- EDZÉS FUNKCIÓK ---
+    window.loadTemplate = () => {
+        const type = document.getElementById('workoutType').value;
+        const container = document.getElementById('exercise-container');
+        const addBtn = document.getElementById('add-custom-btn');
+        container.innerHTML = "";
+        
+        if (!type) { addBtn.classList.add('hidden'); return; }
+        addBtn.classList.remove('hidden');
+
+        templates[type].forEach(ex => createExerciseBlock(ex));
+    };
+
+    window.addCustomExercise = () => {
+        const name = prompt("Gyakorlat neve:");
+        if (name) createExerciseBlock(name);
+    };
+
+    function createExerciseBlock(name) {
+        const container = document.getElementById('exercise-container');
+        const div = document.createElement('div');
+        div.className = "exercise-block";
+        div.innerHTML = `
+            <span class="remove-ex" onclick="this.parentElement.remove()">✕</span>
+            <span class="exercise-name" contenteditable="true">${name}</span>
+            <div class="exercise-row">
+                <input type="text" class="set-input" placeholder="1.">
+                <input type="text" class="set-input" placeholder="2.">
+                <input type="text" class="set-input" placeholder="3.">
+                <input type="text" class="set-input" placeholder="4.">
+            </div>
+        `;
+        container.appendChild(div);
     }
 
-    // --- EDZÉS FUNKCIÓK ---
     window.saveWorkout = () => {
         const date = document.getElementById('workoutDate').value;
-        const type = document.getElementById('workoutType').value;
-        if (!date || !type) return alert("Dátum és típus kötelező!");
+        if (!date) return alert("Dátum kötelező!");
+        
+        const workoutData = { 
+            date, 
+            type: document.getElementById('workoutType').value, 
+            exercises: [] 
+        };
 
-        const workoutData = { date, type, exercises: [] };
-        templates[type].forEach((ex, idx) => {
-            let sets = [
-                document.getElementById(`ex-${idx}-1`).value,
-                document.getElementById(`ex-${idx}-2`).value,
-                document.getElementById(`ex-${idx}-3`).value,
-                document.getElementById(`ex-${idx}-4`).value
-            ];
-            
-            // Intelligens formázás: 50x12 -> 50 kg x 12
-            const formattedSets = sets.map(s => {
+        document.querySelectorAll('.exercise-block').forEach(block => {
+            const name = block.querySelector('.exercise-name').innerText;
+            const sets = Array.from(block.querySelectorAll('.set-input')).map(i => {
+                let s = i.value;
                 if(s.includes('x') && !s.toLowerCase().includes('kg')) {
                     let parts = s.split('x');
                     return `${parts[0].trim()} kg x ${parts[1].trim()}`;
                 }
                 return s;
             });
-
-            workoutData.exercises.push({ name: ex, sets: formattedSets });
+            workoutData.exercises.push({ name, sets });
         });
 
         push(ref(db, 'workouts'), workoutData).then(() => {
-            alert("Edzés mentve!");
+            alert("Mentve!");
             document.getElementById('exercise-container').innerHTML = "";
             document.getElementById('workoutType').value = "";
+            document.getElementById('add-custom-btn').classList.add('hidden');
         });
     };
 
-    function renderWorkouts(list) {
-        const container = document.getElementById('history-container');
-        container.innerHTML = "<h3>Előzmények</h3>";
-        list.forEach(workout => {
-            const d = new Date(workout.date);
-            const card = document.createElement('div');
-            card.className = "card history-card";
-            let exHtml = "";
-            workout.exercises.forEach(ex => {
-                const filled = ex.sets.filter(s => s && s.trim() !== "");
-                if (filled.length > 0) exHtml += `<div style="font-size:13px; margin-top:5px;"><strong>${ex.name}:</strong> ${filled.join(' | ')}</div>`;
-            });
-            card.innerHTML = `<div class="history-header"><strong>${workout.date} <span class="day-label">(${napok[d.getDay()]})</span></strong><button class="btn-delete" onclick="deleteWorkout('${workout.id}')">🗑️</button></div>${exHtml}`;
-            container.appendChild(card);
-        });
-    }
-
-    // --- SÚLY FUNKCIÓK ---
+    // --- SÚLY NAPLÓ LOGIKA ---
     onValue(ref(db, 'weight_logs'), (snapshot) => {
         const data = snapshot.val();
         const container = document.getElementById('weightEntries');
@@ -201,83 +214,91 @@
         if (!data) return;
 
         const sortedDates = Object.keys(data).sort().reverse();
-        let weekSum = 0, weekCount = 0, monthSum = 0, monthCount = 0;
         let lastWeekId = null, lastMonthId = null;
+        let weekBuffer = [], monthValues = [];
 
         sortedDates.forEach((date, index) => {
             const val = data[date].weight;
-            const d = new Date(date);
             const weekId = getWeekId(date);
             const monthId = date.substring(0, 7);
 
             if (lastMonthId && lastMonthId !== monthId) {
-                container.innerHTML += `<div class="avg-month">📅 Havi átlag (${lastMonthId}): ${(monthSum/monthCount).toFixed(2)} kg</div>`;
-                monthSum = 0; monthCount = 0;
+                renderAvgMonth(container, monthValues, lastMonthId);
+                monthValues = [];
             }
             if (lastWeekId && lastWeekId !== weekId) {
-                container.innerHTML += `<div class="avg-week">⚖️ Heti átlag: ${(weekSum/weekCount).toFixed(2)} kg</div>`;
-                weekSum = 0; weekCount = 0;
+                renderAvgWeek(container, weekBuffer);
+                weekBuffer = [];
             }
 
-            lastWeekId = weekId; lastMonthId = monthId;
-
+            const dayName = napok[new Date(date).getDay()];
             container.innerHTML += `
                 <div class="weight-row">
-                    <span>${date} <small>(${napok[d.getDay()]})</small>: <strong>${val} kg</strong></span>
-                    <button class="btn-delete" style="font-size:14px;" onclick="deleteWeight('${date}')">🗑️</button>
+                    <span>${date} <small>(${dayName})</small>: <strong>${val} kg</strong></span>
+                    <button class="btn-delete" onclick="deleteWeight('${date}')">🗑️</button>
                 </div>`;
             
-            weekSum += val; weekCount++;
-            monthSum += val; monthCount++;
+            weekBuffer.push(val);
+            monthValues.push(val);
+            lastWeekId = weekId;
+            lastMonthId = monthId;
 
             if (index === sortedDates.length - 1) {
-                container.innerHTML += `<div class="avg-week">⚖️ Heti átlag: ${(weekSum/weekCount).toFixed(2)} kg</div>`;
-                container.innerHTML += `<div class="avg-month">📅 Havi átlag (${monthId}): ${(monthSum/monthCount).toFixed(2)} kg</div>`;
+                renderAvgWeek(container, weekBuffer);
+                renderAvgMonth(container, monthValues, monthId);
             }
         });
     });
 
-    // --- ALAP FUNKCIÓK (Változatlanok) ---
-    window.loadTemplate = () => {
-        const type = document.getElementById('workoutType').value;
-        const container = document.getElementById('exercise-container');
-        container.innerHTML = "";
-        if (!type) return;
-        templates[type].forEach((ex, idx) => {
-            const div = document.createElement('div');
-            div.className = "exercise-block";
-            div.innerHTML = `<span class="exercise-name">${ex}</span><div class="exercise-row">
-                <input type="text" class="set-input" placeholder="1." id="ex-${idx}-1">
-                <input type="text" class="set-input" placeholder="2." id="ex-${idx}-2">
-                <input type="text" class="set-input" placeholder="3." id="ex-${idx}-3">
-                <input type="text" class="set-input" placeholder="4." id="ex-${idx}-4">
-            </div>`;
-            container.appendChild(div);
-        });
-    };
+    function renderAvgWeek(container, buffer) {
+        if (buffer.length === 0) return;
+        const avg = buffer.reduce((a, b) => a + b, 0) / buffer.length;
+        container.innerHTML += `<div class="avg-week">⚖️ Heti átlag: ${avg.toFixed(2)} kg</div>`;
+    }
 
+    function renderAvgMonth(container, buffer, id) {
+        if (buffer.length === 0) return;
+        const avg = buffer.reduce((a, b) => a + b, 0) / buffer.length;
+        container.innerHTML += `<div class="avg-month">📅 Havi átlag (${id}): ${avg.toFixed(2)} kg</div>`;
+    }
+
+    // --- ALAP FUNKCIÓK ---
+    function getWeekId(dateStr) {
+        const d = new Date(dateStr);
+        d.setHours(0, 0, 0, 0);
+        d.setDate(d.getDate() + 4 - (d.getDay() || 7));
+        return d.getFullYear() + "-W" + Math.ceil((((d - new Date(d.getFullYear(), 0, 1)) / 86400000) + 1) / 7);
+    }
     window.saveWeight = () => {
-        const date = document.getElementById('weightDate').value;
-        const weight = document.getElementById('weightInput').value;
-        if (date && weight) set(ref(db, 'weight_logs/' + date), { weight: parseFloat(weight) }).then(() => document.getElementById('weightInput').value = "");
+        const d = document.getElementById('weightDate').value;
+        const w = document.getElementById('weightInput').value;
+        if (d && w) set(ref(db, 'weight_logs/' + d), { weight: parseFloat(w) }).then(() => document.getElementById('weightInput').value = "");
     };
-
     window.deleteWorkout = (id) => { if(confirm("Törlöd?")) remove(ref(db, `workouts/${id}`)); };
     window.deleteWeight = (date) => { if(confirm("Törlöd?")) remove(ref(db, `weight_logs/${date}`)); };
-    window.showTab = (tab) => {
-        document.getElementById('tab-workout').classList.toggle('hidden', tab !== 'workout');
-        document.getElementById('tab-weight').classList.toggle('hidden', tab !== 'weight');
-        document.getElementById('btn-tab-workout').classList.toggle('active', tab === 'workout');
-        document.getElementById('btn-tab-weight').classList.toggle('active', tab === 'weight');
+    window.showTab = (t) => {
+        document.getElementById('tab-workout').classList.toggle('hidden', t !== 'workout');
+        document.getElementById('tab-weight').classList.toggle('hidden', t !== 'weight');
+        document.getElementById('btn-tab-workout').classList.toggle('active', t === 'workout');
+        document.getElementById('btn-tab-weight').classList.toggle('active', t === 'weight');
     };
-    window.filterWorkouts = () => renderWorkouts(allWorkouts.filter(w => w.date === document.getElementById('searchDate').value));
-    window.clearSearch = () => { document.getElementById('searchDate').value = ""; renderWorkouts(allWorkouts); };
 
-    let allWorkouts = [];
     onValue(ref(db, 'workouts'), (snapshot) => {
         const data = snapshot.val();
-        allWorkouts = data ? Object.keys(data).map(key => ({ id: key, ...data[key] })).sort((a,b) => new Date(b.date) - new Date(a.date)) : [];
-        if (!document.getElementById('searchDate').value) renderWorkouts(allWorkouts);
+        const container = document.getElementById('history-container');
+        container.innerHTML = "<h3>Előzmények</h3>";
+        if (!data) return;
+        const list = Object.keys(data).map(key => ({ id: key, ...data[key] })).sort((a,b) => new Date(b.date) - new Date(a.date));
+        list.forEach(w => {
+            const card = document.createElement('div');
+            card.className = "card";
+            let exHtml = w.exercises.map(ex => {
+                const f = ex.sets.filter(s => s.trim() !== "");
+                return f.length ? `<div style="font-size:13px;margin-top:4px;"><strong>${ex.name}:</strong> ${f.join(' | ')}</div>` : '';
+            }).join('');
+            card.innerHTML = `<div style="display:flex;justify-content:space-between;"><strong>${w.date} <small>(${napok[new Date(w.date).getDay()]})</small></strong><button class="btn-delete" onclick="deleteWorkout('${w.id}')">🗑️</button></div>${exHtml}`;
+            container.appendChild(card);
+        });
     });
 
     document.getElementById('workoutDate').valueAsDate = new Date();
