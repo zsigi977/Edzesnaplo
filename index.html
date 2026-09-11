@@ -11,8 +11,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="FejfájásNapló">
-	<link rel="shortcut icon" href="icon_v3.png">
-
+    <link rel="shortcut icon" href="icon_v3.png">
 
     <!-- Betűtípus (Poppins) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -165,6 +164,12 @@
             color: #c2185b;
         }
 
+        .status-btn.active-caffeine {
+            border-color: rgba(171, 139, 114, 0.8);
+            background: rgba(245, 235, 224, 0.95);
+            color: #6f4e37;
+        }
+
         /* SLIDER / ERŐSSÉG BEÁLLÍTÁSA */
         .slider-container {
             display: flex;
@@ -312,6 +317,12 @@
                 </select>
                 <input type="text" id="customPainType" class="hidden" placeholder="Írd le a fájdalom jellegét...">
 
+                <label>Koffein fogyasztása (kávé, energiaital, tea stb.)</label>
+                <div class="status-toggle">
+                    <div id="btn-caffeine-no" class="status-btn active-no" onclick="toggleCaffeine(false)">NEM 🚫</div>
+                    <div id="btn-caffeine-yes" class="status-btn" onclick="toggleCaffeine(true)">IGEN ☕</div>
+                </div>
+
                 <div class="dual-input-group">
                     <div>
                         <label for="bloodPressureInput">Vérnyomás</label>
@@ -374,6 +385,7 @@
 
     const napok = ["Vasárnap", "Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek", "Szombat"];
     let hasHeadache = false;
+    let hadCaffeine = false;
     let allLogs = {};
 
     function formatDateToLocalString(d) {
@@ -410,6 +422,20 @@
         }
     };
 
+    window.toggleCaffeine = (status) => {
+        hadCaffeine = status;
+        const btnNo = document.getElementById('btn-caffeine-no');
+        const btnYes = document.getElementById('btn-caffeine-yes');
+
+        if (status) {
+            btnYes.classList.add('active-caffeine');
+            btnNo.classList.remove('active-no');
+        } else {
+            btnNo.classList.add('active-no');
+            btnYes.classList.remove('active-caffeine');
+        }
+    };
+
     window.checkCustomPainType = (val) => {
         const customInput = document.getElementById('customPainType');
         if (val === "Egyéb") {
@@ -434,6 +460,7 @@
             
             entryData.intensity = parseInt(document.getElementById('intensitySlider').value);
             entryData.painType = (painTypeSelect === "Egyéb" && customPain.trim() !== "") ? customPain : painTypeSelect;
+            entryData.caffeine = hadCaffeine;
             entryData.bloodPressure = document.getElementById('bloodPressureInput').value.trim();
             entryData.pulse = document.getElementById('pulseInput').value.trim();
             entryData.symptoms = {
@@ -455,6 +482,7 @@
     function resetForm() {
         document.getElementById('headacheDate').value = formatDateToLocalString(new Date());
         toggleHeadache(false);
+        toggleCaffeine(false);
         document.getElementById('intensitySlider').value = 1;
         updateIntensityDisplay(1);
         document.getElementById('painType').selectedIndex = 0;
@@ -560,6 +588,7 @@
                     </div>
                     <div style="font-size:12.5px; color:#5c506b; line-height: 1.5;">
                         <div><strong>Jelleg:</strong> ${item.painType || 'Nincs megadva'}</div>
+                        <div><strong>Koffein:</strong> ${item.caffeine ? '☕ Igen' : '🚫 Nem'}</div>
                         ${bpPulseStr ? `<div><strong>Vérnyomás / Pulzus:</strong> ${bpPulseStr}</div>` : ''}
                         ${symptomsList.length ? `<div><strong>Tünetek:</strong> ${symptomsList.join(', ')}</div>` : ''}
                         ${item.medication ? `<div><strong>Gyógyszer:</strong> ${item.medication}</div>` : ''}
@@ -597,6 +626,7 @@
         if (item.hasHeadache) {
             document.getElementById('intensitySlider').value = item.intensity || 1;
             updateIntensityDisplay(item.intensity || 1);
+            toggleCaffeine(!!item.caffeine);
             
             const painSelect = document.getElementById('painType');
             const customInput = document.getElementById('customPainType');
@@ -626,6 +656,7 @@
         } else {
             document.getElementById('intensitySlider').value = 1;
             updateIntensityDisplay(1);
+            toggleCaffeine(false);
             document.getElementById('painType').selectedIndex = 0;
             document.getElementById('customPainType').value = "";
             document.getElementById('customPainType').classList.add('hidden');
@@ -668,6 +699,7 @@
         
         let avgIntensity = 0;
         let totalHours = 0;
+        let caffeineCount = 0;
         let symptomCounts = { nausea: 0, light: 0, sound: 0, motion: 0 };
 
         if (totalHeadacheDays > 0) {
@@ -675,6 +707,7 @@
             avgIntensity = (intensitySum / totalHeadacheDays).toFixed(1);
 
             totalHours = headacheDays.reduce((acc, l) => acc + (l.duration || 0), 0);
+            caffeineCount = headacheDays.filter(l => l.caffeine).length;
 
             headacheDays.forEach(l => {
                 if (l.symptoms) {
@@ -700,6 +733,11 @@
             <div class="stat-box" style="border-left-color: #ffb74d;">
                 <div class="stat-title">Összes fejfájással töltött idő</div>
                 <div class="stat-value">${totalHours} óra</div>
+            </div>
+
+            <div class="stat-box" style="border-left-color: #ab8b72;">
+                <div class="stat-title">Koffeinfogyasztás fejfájós napokon</div>
+                <div class="stat-value">${caffeineCount} napon <small style="font-size:12px; font-weight:normal; color:#777;">(${totalHeadacheDays}-ból)</small></div>
             </div>
 
             ${totalHeadacheDays > 0 ? `
