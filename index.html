@@ -3,137 +3,343 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EdzésNapló Pro</title>
+    <title>FejfájásNapló Pro</title>
     
+    <!-- Ikon beállítások (icon.png) -->
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="EdzésNapló">
+    <meta name="apple-mobile-web-app-title" content="FejfájásNapló">
+
+    <!-- Szép, csajos, kerekded betűtípus (Poppins) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        * { box-sizing: border-box; }
+        * { 
+            box-sizing: border-box; 
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
 
         body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
-            background: url('hatter.png') no-repeat center center fixed; 
-            background-size: cover; 
-            margin: 0; padding: 10px; 
+            /* Háttérkép (hatter.png) lágy átmenetes réteggel letakarva */
+            background: linear-gradient(135deg, rgba(252, 228, 236, 0.6) 0%, rgba(243, 229, 245, 0.6) 50%, rgba(232, 234, 246, 0.6) 100%), 
+                        url('hatter.png') center/cover no-repeat fixed;
+            margin: 0; padding: 12px; 
             display: flex; flex-direction: column; align-items: center; 
             min-height: 100vh; 
+            color: #4a4a4a;
         }
 
+        /* FŐ KONTÉNER ÜVEGHATÁS */
         #app { 
-            background: rgba(255, 255, 255, 0.75); 
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            padding: 15px; border-radius: 25px; 
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2); 
-            width: 100%; max-width: 500px; 
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.65); 
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 20px; 
+            border-radius: 30px; 
+            box-shadow: 0 15px 35px rgba(210, 160, 190, 0.3); 
+            width: 100%; max-width: 480px; 
+            border: 1px solid rgba(255, 255, 255, 0.8);
         }
 
-        .tabs { display: flex; gap: 8px; margin-bottom: 20px; }
-        .tab-btn { flex: 1; padding: 12px; border-radius: 12px; border: none; background: rgba(255,255,255,0.4); cursor: pointer; font-weight: bold; font-size: 14px; }
-        .tab-btn.active { background: #007aff; color: white; }
+        /* TABOK ÜVEGHATÁS */
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab-btn { 
+            flex: 1; 
+            padding: 12px; 
+            border-radius: 18px; 
+            border: 1px solid rgba(255, 255, 255, 0.6); 
+            background: rgba(255, 255, 255, 0.45); 
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: #7e6b8f;
+            cursor: pointer; 
+            font-weight: 600; 
+            font-size: 14px; 
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+        }
+        .tab-btn.active { 
+            background: linear-gradient(135deg, rgba(247, 141, 167, 0.85) 0%, rgba(207, 151, 224, 0.85) 100%); 
+            color: white; 
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 6px 15px rgba(247, 141, 167, 0.35);
+        }
 
+        /* KÁRTYÁK ÜVEGHATÁS */
         .card { 
-            background: rgba(255, 255, 255, 0.6); 
-            padding: 15px; border-radius: 15px; 
-            margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.4); 
-            width: 100%; /* Fix: A kártya mindig töltse ki az appot */
+            background: rgba(255, 255, 255, 0.55); 
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 18px; 
+            border-radius: 22px; 
+            margin-bottom: 16px; 
+            border: 1px solid rgba(255, 255, 255, 0.7); 
+            box-shadow: 0 8px 24px rgba(180, 150, 180, 0.12);
+            width: 100%; 
+        }
+
+        h3 {
+            color: #5d4a6c;
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 12px;
+        }
+
+        label {
+            font-weight: 500;
+            font-size: 13px;
+            color: #6a5a7d;
+            display: block;
+            margin-top: 12px;
+            margin-bottom: 6px;
         }
         
-        /* FIXÁLT INPUT STÍLUS - NEM FOG KILÓGNI */
-        input, select { 
-            padding: 12px; 
-            border-radius: 8px; 
-            border: 1px solid rgba(0,0,0,0.1); 
-            font-size: 16px; 
+        input[type="text"], input[type="number"], input[type="date"], input[type="month"], select { 
+            padding: 12px 14px; 
+            border-radius: 14px; 
+            border: 1.5px solid rgba(235, 219, 232, 0.8); 
+            font-size: 14px; 
+            color: #555;
             margin-bottom: 10px; 
             width: 100% !important; 
             display: block;
-            background: rgba(255,255,255,0.8);
-            -webkit-appearance: none; /* iOS fix */
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            outline: none;
+            transition: border 0.2s, background 0.2s;
+            -webkit-appearance: none;
             appearance: none;
         }
 
-        /* Speciális fix a dátumválasztónak mobilra */
-        input[type="date"] {
-            min-height: 44px;
-            max-width: 100%;
+        input:focus, select:focus {
+            border-color: #f78da7;
+            background: rgba(255, 255, 255, 0.95);
         }
 
-        .weight-input-group { display: flex; flex-direction: column; gap: 5px; }
-
-        @media (min-width: 400px) {
-            .weight-input-group { flex-direction: row; align-items: center; }
-            .weight-input-group input[type="date"] { flex: 2; margin-bottom: 0; }
-            .weight-input-group input[type="number"] { flex: 1; margin-bottom: 0; }
-            .weight-input-group .btn-ok { width: auto; height: 44px; margin-top: 0; flex: 0.5; }
+        /* RADIO TOGGLE GOMBOK */
+        .status-toggle {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
         }
 
-        .exercise-block { margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid rgba(0,0,0,0.05); position: relative; }
-        .exercise-name { font-weight: bold; font-size: 15px; color: #007aff; display: block; margin-bottom: 8px; width: 85%; outline: none; }
-        .exercise-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
-        .set-input { padding: 8px; text-align: center; font-size: 12px; margin-bottom: 0; }
+        .status-btn {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            border-radius: 16px;
+            border: 1.5px solid rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.5);
+            color: #777;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
 
-        .btn-primary { background: #007aff; color: white; border: none; padding: 14px; border-radius: 12px; width: 100%; font-weight: bold; cursor: pointer; font-size: 16px; margin-top: 5px; }
-        .btn-add-ex { background: #34c759; color: white; border: none; padding: 10px; border-radius: 10px; width: 100%; font-weight: bold; cursor: pointer; font-size: 14px; margin-bottom: 10px; }
-        .btn-delete { background: none; border: none; color: #ff3b30; cursor: pointer; font-size: 18px; padding: 5px; }
-        .remove-ex { position: absolute; right: 0; top: 0; color: #ff3b30; font-weight: bold; cursor: pointer; padding: 5px; font-size: 20px; }
+        .status-btn.active-no {
+            border-color: rgba(145, 215, 172, 0.8);
+            background: rgba(232, 245, 233, 0.8);
+            color: #2e7d32;
+        }
 
-        .avg-week { padding: 10px; background: rgba(52, 199, 89, 0.15); border-radius: 10px; margin: 10px 0; font-weight: bold; color: #248a3d; font-size: 13px; text-align: center; border: 1px dashed #34c759; }
-        .avg-month { padding: 12px; background: rgba(0, 122, 255, 0.15); border-radius: 10px; margin: 15px 0 5px 0; font-weight: bold; color: #007aff; font-size: 14px; text-align: center; border: 1px solid #007aff; }
+        .status-btn.active-yes {
+            border-color: rgba(247, 141, 167, 0.8);
+            background: rgba(253, 232, 237, 0.8);
+            color: #c2185b;
+        }
 
-        .weight-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(0,0,0,0.05); }
-        .hidden { display: none; }
+        /* SLIDER / ERŐSSÉG BEÁLLÍTÁSA */
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(250, 244, 248, 0.6);
+            padding: 10px 14px;
+            border-radius: 16px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(240, 226, 237, 0.8);
+        }
+
+        .slider-container input[type="range"] {
+            flex: 1;
+            margin: 0;
+            accent-color: #f78da7;
+            cursor: pointer;
+        }
+
+        .emoji-display {
+            font-size: 28px;
+            min-width: 36px;
+            text-align: center;
+        }
+
+        .intensity-val {
+            font-weight: 600;
+            font-size: 14px;
+            color: #7e6b8f;
+            width: 42px;
+        }
+
+        /* CHECKBOX-OK STÍLUSA */
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin: 10px 0;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(250, 244, 248, 0.6);
+            padding: 9px 12px;
+            border-radius: 12px;
+            font-size: 12.5px;
+            color: #5c506b;
+            cursor: pointer;
+            border: 1px solid rgba(240, 226, 237, 0.8);
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 16px !important;
+            height: 16px;
+            accent-color: #f78da7;
+            margin: 0;
+        }
+
+        /* GOMBOK */
+        .btn-primary { 
+            background: linear-gradient(135deg, rgba(247, 141, 167, 0.9) 0%, rgba(224, 132, 164, 0.9) 100%); 
+            color: white; 
+            border: 1px solid rgba(255, 255, 255, 0.4); 
+            padding: 14px; 
+            border-radius: 16px; 
+            width: 100%; 
+            font-weight: 600; 
+            cursor: pointer; 
+            font-size: 15px; 
+            margin-top: 10px;
+            box-shadow: 0 6px 15px rgba(247, 141, 167, 0.35);
+            transition: transform 0.1s ease;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-delete { background: none; border: none; color: #ff6b6b; cursor: pointer; font-size: 16px; padding: 4px; }
+        .btn-edit { background: none; border: none; color: #8c7ae6; cursor: pointer; font-size: 16px; padding: 4px; margin-right: 4px; }
+
+        /* STATISZTIKAI KÁRTYÁK ÜVEGHATÁS */
+        .stat-box {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 14px;
+            margin-bottom: 10px;
+            border-left: 5px solid #f78da7;
+            border-top: 1px solid rgba(255, 255, 255, 0.8);
+            border-right: 1px solid rgba(255, 255, 255, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+        }
+
+        .stat-title { font-size: 11px; color: #8e7c93; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-value { font-size: 20px; font-weight: 700; color: #4a3b56; margin-top: 2px; }
+
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
 <div id="app">
     <div class="tabs">
-        <button id="btn-tab-workout" class="tab-btn active" onclick="showTab('workout')">🏋️ Edzés</button>
-        <button id="btn-tab-weight" class="tab-btn" onclick="showTab('weight')">⚖️ Súly</button>
+        <button id="btn-tab-log" class="tab-btn active" onclick="showTab('log')">🌸 Napló</button>
+        <button id="btn-tab-stats" class="tab-btn" onclick="showTab('stats')">📊 Statisztika</button>
     </div>
 
-    <div id="tab-workout">
+    <!-- NAPLÓZÁS TAB -->
+    <div id="tab-log">
         <div class="card">
-            <h3>Új Edzés</h3>
-            <input type="date" id="workoutDate">
-            <select id="workoutType" onchange="loadTemplate()">
-                <option value="">-- Sablon --</option>
-                <option value="felso">Felsőtest</option>
-                <option value="also">Alsótest</option>
-                <option value="egyedi">Egyedi (Üres)</option>
-            </select>
-            <div id="exercise-container"></div>
-            <button id="add-custom-btn" class="btn-add-ex hidden" onclick="addCustomExercise()">+ Gyakorlat hozzáadása</button>
-            <button class="btn-primary" onclick="saveWorkout()">Mentés</button>
+            <h3>Új Bejegyzés</h3>
+            
+            <label for="headacheDate">Dátum</label>
+            <input type="date" id="headacheDate">
+
+            <label>Fájt ma a fejed?</label>
+            <div class="status-toggle">
+                <div id="btn-has-headache-no" class="status-btn active-no" onclick="toggleHeadache(false)">NEM 😀</div>
+                <div id="btn-has-headache-yes" class="status-btn" onclick="toggleHeadache(true)">IGEN 🤕</div>
+            </div>
+
+            <!-- Részletes kérdések -->
+            <div id="headache-details" class="hidden">
+                
+                <label>Fájdalom erőssége (1-10)</label>
+                <div class="slider-container">
+                    <span id="emoji-display" class="emoji-display">😊</span>
+                    <input type="range" id="intensitySlider" min="1" max="10" value="1" oninput="updateIntensityDisplay(this.value)">
+                    <span id="intensityVal" class="intensity-val">1/10</span>
+                </div>
+
+                <label for="painType">Fájdalom jellege</label>
+                <select id="painType" onchange="checkCustomPainType(this.value)">
+                    <option value="Lüktető">Lüktető</option>
+                    <option value="Tompa / Szorító">Tompa / Szorító</option>
+                    <option value="Hasogató">Hasogató</option>
+                    <option value="Éles / Szúró">Éles / Szúró</option>
+                    <option value="Egyéb">Egyéb (Egyéni)</option>
+                </select>
+                <input type="text" id="customPainType" class="hidden" placeholder="Írd le a fájdalom jellegét...">
+
+                <label>Kísérő tünetek</label>
+                <div class="checkbox-group">
+                    <label class="checkbox-item"><input type="checkbox" id="symNausea"> Hányinger / Hányás</label>
+                    <label class="checkbox-item"><input type="checkbox" id="symLight"> Fényérzékenység</label>
+                    <label class="checkbox-item"><input type="checkbox" id="symSound"> Hangérzékenység</label>
+                    <label class="checkbox-item"><input type="checkbox" id="symMotion"> Mozgásra romlik</label>
+                </div>
+
+                <label for="medicationInput">Bevett gyógyszer neve és adagja</label>
+                <input type="text" id="medicationInput" list="medicationHistory" placeholder="pl. Algopyrin 500mg">
+                <datalist id="medicationHistory"></datalist>
+
+                <label for="durationInput">Hány órát fájt összesen?</label>
+                <input type="number" id="durationInput" min="0.5" max="24" step="0.5" placeholder="pl. 3">
+
+            </div>
+
+            <button class="btn-primary" onclick="saveEntry()">Mentés</button>
         </div>
+
         <div id="history-container"></div>
     </div>
 
-    <div id="tab-weight" class="hidden">
+    <!-- STATISZTIKA TAB -->
+    <div id="tab-stats" class="hidden">
         <div class="card">
-            <h3>Testsúly</h3>
-            <div class="weight-input-group">
-                <input type="date" id="weightDate">
-                <input type="number" id="weightInput" step="0.1" placeholder="kg">
-                <button class="btn-primary btn-ok" onclick="saveWeight()">OK</button>
-            </div>
-        </div>
-        <div class="card">
-            <div id="weightEntries"></div>
+            <h3>Havi Összegzés</h3>
+            <label for="statsMonthSelect">Válassz hónapot:</label>
+            <input type="month" id="statsMonthSelect" onchange="renderStats()">
+
+            <div id="stats-content" style="margin-top: 15px;"></div>
         </div>
     </div>
 </div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, set, onValue, remove } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyCslE4Kc229j41Sm2l7ovpc_KEWhOb107k",
@@ -145,151 +351,331 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    const templates = {
-        felso: ["Melltámaszos evezés", "Mellhez húzás", "Fekvenyomó gép", "Vállból nyomó gép", "Oldalemelés", "Bicepsz", "Tricepsz"],
-        also: ["Lábtoló", "Combfeszítő", "Combhajlító", "Combközelítő", "Hip Thrust", "Vádli"],
-        egyedi: []
-    };
-
     const napok = ["Vasárnap", "Hétfő", "Kedd", "Szerda", "Csütörtök", "Péntek", "Szombat"];
+    let hasHeadache = false;
+    let allLogs = {};
 
-    window.loadTemplate = () => {
-        const type = document.getElementById('workoutType').value;
-        const container = document.getElementById('exercise-container');
-        const addBtn = document.getElementById('add-custom-btn');
-        container.innerHTML = "";
-        if (!type) { addBtn.classList.add('hidden'); return; }
-        addBtn.classList.remove('hidden');
-        templates[type].forEach(ex => createExerciseBlock(ex));
+    window.updateIntensityDisplay = (val) => {
+        document.getElementById('intensityVal').innerText = val + "/10";
+        const emojiEl = document.getElementById('emoji-display');
+        
+        if (val <= 2) emojiEl.innerText = "😊";
+        else if (val <= 4) emojiEl.innerText = "😐";
+        else if (val <= 6) emojiEl.innerText = "😣";
+        else if (val <= 8) emojiEl.innerText = "😫";
+        else emojiEl.innerText = "💀";
     };
 
-    window.addCustomExercise = () => {
-        const name = prompt("Gyakorlat neve:");
-        if (name) createExerciseBlock(name);
+    window.toggleHeadache = (status) => {
+        hasHeadache = status;
+        const btnNo = document.getElementById('btn-has-headache-no');
+        const btnYes = document.getElementById('btn-has-headache-yes');
+        const detailsDiv = document.getElementById('headache-details');
+
+        if (status) {
+            btnYes.classList.add('active-yes');
+            btnNo.classList.remove('active-no');
+            detailsDiv.classList.remove('hidden');
+        } else {
+            btnNo.classList.add('active-no');
+            btnYes.classList.remove('active-yes');
+            detailsDiv.classList.add('hidden');
+        }
     };
 
-    function createExerciseBlock(name) {
-        const container = document.getElementById('exercise-container');
-        const div = document.createElement('div');
-        div.className = "exercise-block";
-        div.innerHTML = `
-            <span class="remove-ex" onclick="this.parentElement.remove()">✕</span>
-            <span class="exercise-name" contenteditable="true">${name}</span>
-            <div class="exercise-row">
-                <input type="text" class="set-input" placeholder="1.">
-                <input type="text" class="set-input" placeholder="2.">
-                <input type="text" class="set-input" placeholder="3.">
-                <input type="text" class="set-input" placeholder="4.">
-            </div>
-        `;
-        container.appendChild(div);
+    window.checkCustomPainType = (val) => {
+        const customInput = document.getElementById('customPainType');
+        if (val === "Egyéb") {
+            customInput.classList.remove('hidden');
+        } else {
+            customInput.classList.add('hidden');
+        }
+    };
+
+    window.saveEntry = () => {
+        const date = document.getElementById('headacheDate').value;
+        if (!date) return alert("Kérlek, válassz dátumot!");
+
+        const entryData = {
+            hasHeadache: hasHeadache,
+            timestamp: new Date().getTime()
+        };
+
+        if (hasHeadache) {
+            const painTypeSelect = document.getElementById('painType').value;
+            const customPain = document.getElementById('customPainType').value;
+            
+            entryData.intensity = parseInt(document.getElementById('intensitySlider').value);
+            entryData.painType = (painTypeSelect === "Egyéb" && customPain.trim() !== "") ? customPain : painTypeSelect;
+            entryData.symptoms = {
+                nausea: document.getElementById('symNausea').checked,
+                light: document.getElementById('symLight').checked,
+                sound: document.getElementById('symSound').checked,
+                motion: document.getElementById('symMotion').checked
+            };
+            entryData.medication = document.getElementById('medicationInput').value.trim();
+            entryData.duration = parseFloat(document.getElementById('durationInput').value) || 0;
+        }
+
+        set(ref(db, 'headache_logs/' + date), entryData).then(() => {
+            alert("Sikeresen elmentve! ✨");
+            resetForm();
+        });
+    };
+
+    function resetForm() {
+        document.getElementById('headacheDate').valueAsDate = new Date();
+        toggleHeadache(false);
+        document.getElementById('intensitySlider').value = 1;
+        updateIntensityDisplay(1);
+        document.getElementById('painType').selectedIndex = 0;
+        document.getElementById('customPainType').value = "";
+        document.getElementById('customPainType').classList.add('hidden');
+        document.getElementById('symNausea').checked = false;
+        document.getElementById('symLight').checked = false;
+        document.getElementById('symSound').checked = false;
+        document.getElementById('symMotion').checked = false;
+        document.getElementById('medicationInput').value = "";
+        document.getElementById('durationInput').value = "";
     }
 
-    window.saveWorkout = () => {
-        const date = document.getElementById('workoutDate').value;
-        if (!date) return alert("Dátum kötelező!");
-        const workoutData = { date, type: document.getElementById('workoutType').value, exercises: [] };
-        document.querySelectorAll('.exercise-block').forEach(block => {
-            const name = block.querySelector('.exercise-name').innerText;
-            const sets = Array.from(block.querySelectorAll('.set-input')).map(i => {
-                let s = i.value;
-                if(s.includes('x') && !s.toLowerCase().includes('kg')) {
-                    let parts = s.split('x');
-                    return `${parts[0].trim()} kg x ${parts[1].trim()}`;
-                }
-                return s;
-            });
-            workoutData.exercises.push({ name, sets });
-        });
-        push(ref(db, 'workouts'), workoutData).then(() => {
-            alert("Mentve!");
-            document.getElementById('exercise-container').innerHTML = "";
-            document.getElementById('workoutType').value = "";
-            document.getElementById('add-custom-btn').classList.add('hidden');
-        });
-    };
+    // AUTOMATIKUS HIÁNYPÓTLÁS (Szeptember 1-ig visszamenőleg)
+    function autoFillMissingDays() {
+        if (!allLogs) return;
+        const today = new Date();
+        const startDate = new Date(today.getFullYear(), 8, 1); // 8-as hónap = Szeptember
 
-    onValue(ref(db, 'weight_logs'), (snapshot) => {
-        const data = snapshot.val();
-        const container = document.getElementById('weightEntries');
-        container.innerHTML = "";
-        if (!data) return;
-        const sortedDates = Object.keys(data).sort().reverse();
-        let lastWeekId = null, lastMonthId = null;
-        let weekBuffer = [], monthValues = [];
+        let curr = new Date(startDate);
 
-        sortedDates.forEach((date, index) => {
-            const val = data[date].weight;
-            const weekId = getWeekId(date);
-            const monthId = date.substring(0, 7);
-            if (lastMonthId && lastMonthId !== monthId) { renderAvgMonth(container, monthValues, lastMonthId); monthValues = []; }
-            if (lastWeekId && lastWeekId !== weekId) { renderAvgWeek(container, weekBuffer); weekBuffer = []; }
+        while (curr < today) {
+            const dateStr = curr.toISOString().split('T')[0];
 
-            const dayName = napok[new Date(date).getDay()];
-            container.innerHTML += `<div class="weight-row"><span>${date} <small>(${dayName})</small>: <strong>${val} kg</strong></span><button class="btn-delete" onclick="deleteWeight('${date}')">🗑️</button></div>`;
-            
-            weekBuffer.push(val);
-            monthValues.push(val);
-            lastWeekId = weekId;
-            lastMonthId = monthId;
+            if (allLogs[dateStr] === undefined) {
+                set(ref(db, 'headache_logs/' + dateStr), {
+                    hasHeadache: false,
+                    timestamp: curr.getTime(),
+                    autoFilled: true
+                });
+            }
 
-            if (index === sortedDates.length - 1) { renderAvgWeek(container, weekBuffer); renderAvgMonth(container, monthValues, monthId); }
-        });
+            curr.setDate(curr.getDate() + 1);
+        }
+    }
+
+    onValue(ref(db, 'headache_logs'), (snapshot) => {
+        allLogs = snapshot.val() || {};
+        autoFillMissingDays();
+        renderHistory();
+        updateMedicationDatalist();
+        renderStats();
     });
 
-    function renderAvgWeek(container, buffer) {
-        if (buffer.length === 0) return;
-        const avg = buffer.reduce((a, b) => a + b, 0) / buffer.length;
-        container.innerHTML += `<div class="avg-week">⚖️ Heti átlag: ${avg.toFixed(2)} kg</div>`;
-    }
-
-    function renderAvgMonth(container, buffer, id) {
-        if (buffer.length === 0) return;
-        const avg = buffer.reduce((a, b) => a + b, 0) / buffer.length;
-        container.innerHTML += `<div class="avg-month">📅 Havi átlag (${id}): ${avg.toFixed(2)} kg</div>`;
-    }
-
-    function getWeekId(dateStr) {
-        const d = new Date(dateStr); d.setHours(0, 0, 0, 0);
-        d.setDate(d.getDate() + 4 - (d.getDay() || 7));
-        return d.getFullYear() + "-W" + Math.ceil((((d - new Date(d.getFullYear(), 0, 1)) / 86400000) + 1) / 7);
-    }
-
-    window.saveWeight = () => {
-        const d = document.getElementById('weightDate').value;
-        const w = document.getElementById('weightInput').value;
-        if (d && w) set(ref(db, 'weight_logs/' + d), { weight: parseFloat(w) }).then(() => document.getElementById('weightInput').value = "");
-    };
-
-    window.deleteWorkout = (id) => { if(confirm("Törlöd?")) remove(ref(db, `workouts/${id}`)); };
-    window.deleteWeight = (date) => { if(confirm("Törlöd?")) remove(ref(db, `weight_logs/${date}`)); };
-    window.showTab = (t) => {
-        document.getElementById('tab-workout').classList.toggle('hidden', t !== 'workout');
-        document.getElementById('tab-weight').classList.toggle('hidden', t !== 'weight');
-        document.getElementById('btn-tab-workout').classList.toggle('active', t === 'workout');
-        document.getElementById('btn-tab-weight').classList.toggle('active', t === 'weight');
-    };
-
-    onValue(ref(db, 'workouts'), (snapshot) => {
-        const data = snapshot.val();
+    function renderHistory() {
         const container = document.getElementById('history-container');
-        container.innerHTML = "<h3>Előzmények</h3>";
-        if (!data) return;
-        const list = Object.keys(data).map(key => ({ id: key, ...data[key] })).sort((a,b) => new Date(b.date) - new Date(a.date));
-        list.forEach(w => {
+        container.innerHTML = "<h3 style='margin-left: 5px; color: #5d4a6c;'>Előzmények</h3>";
+        
+        const sortedDates = Object.keys(allLogs).sort().reverse();
+        if (sortedDates.length === 0) {
+            container.innerHTML += "<p style='color:#777; font-size:13px; margin-left: 5px;'>Még nincs rögzített adat.</p>";
+            return;
+        }
+
+        sortedDates.forEach(date => {
+            const item = allLogs[date];
             const card = document.createElement('div');
             card.className = "card";
-            let exHtml = w.exercises.map(ex => {
-                const f = ex.sets.filter(s => s.trim() !== "");
-                return f.length ? `<div style="font-size:13px;margin-top:4px;"><strong>${ex.name}:</strong> ${f.join(' | ')}</div>` : '';
-            }).join('');
-            card.innerHTML = `<div style="display:flex;justify-content:space-between;"><strong>${w.date} <small>(${napok[new Date(w.date).getDay()]})</small></strong><button class="btn-delete" onclick="deleteWorkout('${w.id}')">🗑️</button></div>${exHtml}`;
+
+            const dayName = napok[new Date(date).getDay()];
+
+            if (!item.hasHeadache) {
+                card.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span><strong style="color:#4a3b56;">${date}</strong> <small style="color:#8e7c93;">(${dayName})</small></span>
+                        <span style="color:#2e7d32; font-weight:600; font-size:13px;">😀 Nem fájt</span>
+                        <div>
+                            <button class="btn-edit" onclick="editEntry('${date}')">✏️</button>
+                            <button class="btn-delete" onclick="deleteEntry('${date}')">🗑️</button>
+                        </div>
+                    </div>`;
+            } else {
+                let symptomsList = [];
+                if (item.symptoms) {
+                    if (item.symptoms.nausea) symptomsList.push("Hányinger/Hányás");
+                    if (item.symptoms.light) symptomsList.push("Fényérzékenység");
+                    if (item.symptoms.sound) symptomsList.push("Hangérzékenység");
+                    if (item.symptoms.motion) symptomsList.push("Mozgásra romlik");
+                }
+
+                card.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <span><strong style="color:#4a3b56;">${date}</strong> <small style="color:#8e7c93;">(${dayName})</small></span>
+                        <span style="color:#d81b60; font-weight:600; font-size:13.5px;">🤕 Fájt (${item.intensity}/10)</span>
+                        <div>
+                            <button class="btn-edit" onclick="editEntry('${date}')">✏️</button>
+                            <button class="btn-delete" onclick="deleteEntry('${date}')">🗑️</button>
+                        </div>
+                    </div>
+                    <div style="font-size:12.5px; color:#5c506b; line-height: 1.5;">
+                        <div><strong>Jelleg:</strong> ${item.painType || 'Nincs megadva'}</div>
+                        ${symptomsList.length ? `<div><strong>Tünetek:</strong> ${symptomsList.join(', ')}</div>` : ''}
+                        ${item.medication ? `<div><strong>Gyógyszer:</strong> ${item.medication}</div>` : ''}
+                        ${item.duration ? `<div><strong>Időtartam:</strong> ${item.duration} óra</div>` : ''}
+                    </div>
+                `;
+            }
             container.appendChild(card);
         });
-    });
+    }
 
-    document.getElementById('workoutDate').valueAsDate = new Date();
-    document.getElementById('weightDate').valueAsDate = new Date();
+    function updateMedicationDatalist() {
+        const datalist = document.getElementById('medicationHistory');
+        datalist.innerHTML = "";
+        const meds = new Set();
+
+        Object.values(allLogs).forEach(log => {
+            if (log.medication) meds.add(log.medication);
+        });
+
+        meds.forEach(med => {
+            const opt = document.createElement('option');
+            opt.value = med;
+            datalist.appendChild(opt);
+        });
+    }
+
+    window.editEntry = (date) => {
+        const item = allLogs[date];
+        if (!item) return;
+
+        document.getElementById('headacheDate').value = date;
+        toggleHeadache(item.hasHeadache);
+
+        if (item.hasHeadache) {
+            document.getElementById('intensitySlider').value = item.intensity || 1;
+            updateIntensityDisplay(item.intensity || 1);
+            
+            const painSelect = document.getElementById('painType');
+            const customInput = document.getElementById('customPainType');
+            
+            if (["Lüktető", "Tompa / Szorító", "Hasogató", "Éles / Szúró"].includes(item.painType)) {
+                painSelect.value = item.painType;
+                customInput.classList.add('hidden');
+            } else {
+                painSelect.value = "Egyéb";
+                customInput.value = item.painType || "";
+                customInput.classList.remove('hidden');
+            }
+
+            if (item.symptoms) {
+                document.getElementById('symNausea').checked = !!item.symptoms.nausea;
+                document.getElementById('symLight').checked = !!item.symptoms.light;
+                document.getElementById('symSound').checked = !!item.symptoms.sound;
+                document.getElementById('symMotion').checked = !!item.symptoms.motion;
+            }
+
+            document.getElementById('medicationInput').value = item.medication || "";
+            document.getElementById('durationInput').value = item.duration || "";
+        } else {
+            document.getElementById('intensitySlider').value = 1;
+            updateIntensityDisplay(1);
+            document.getElementById('painType').selectedIndex = 0;
+            document.getElementById('customPainType').value = "";
+            document.getElementById('customPainType').classList.add('hidden');
+            document.getElementById('symNausea').checked = false;
+            document.getElementById('symLight').checked = false;
+            document.getElementById('symSound').checked = false;
+            document.getElementById('symMotion').checked = false;
+            document.getElementById('medicationInput').value = "";
+            document.getElementById('durationInput').value = "";
+        }
+
+        showTab('log');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.deleteEntry = (date) => {
+        if (confirm(`Biztosan törlöd a ${date} bejegyzést?`)) {
+            remove(ref(db, 'headache_logs/' + date));
+        }
+    };
+
+    window.renderStats = () => {
+        const selectedMonth = document.getElementById('statsMonthSelect').value;
+        const container = document.getElementById('stats-content');
+        if (!selectedMonth) return;
+
+        const monthLogs = Object.keys(allLogs)
+            .filter(d => d.startsWith(selectedMonth))
+            .map(d => allLogs[d]);
+
+        if (monthLogs.length === 0) {
+            container.innerHTML = "<p style='color:#777; font-size:13px;'>Erre a hónapra nincs rögzített adat.</p>";
+            return;
+        }
+
+        const headacheDays = monthLogs.filter(l => l.hasHeadache);
+        const totalHeadacheDays = headacheDays.length;
+        
+        let avgIntensity = 0;
+        let totalHours = 0;
+        let symptomCounts = { nausea: 0, light: 0, sound: 0, motion: 0 };
+
+        if (totalHeadacheDays > 0) {
+            const intensitySum = headacheDays.reduce((acc, l) => acc + (l.intensity || 0), 0);
+            avgIntensity = (intensitySum / totalHeadacheDays).toFixed(1);
+
+            totalHours = headacheDays.reduce((acc, l) => acc + (l.duration || 0), 0);
+
+            headacheDays.forEach(l => {
+                if (l.symptoms) {
+                    if (l.symptoms.nausea) symptomCounts.nausea++;
+                    if (l.symptoms.light) symptomCounts.light++;
+                    if (l.symptoms.sound) symptomCounts.sound++;
+                    if (l.symptoms.motion) symptomCounts.motion++;
+                }
+            });
+        }
+
+        container.innerHTML = `
+            <div class="stat-box" style="border-left-color: #f78da7;">
+                <div class="stat-title">Fejfájós napok száma</div>
+                <div class="stat-value">${totalHeadacheDays} nap <small style="font-size:12px; font-weight:normal; color:#777;">(${monthLogs.length} rögzített napból)</small></div>
+            </div>
+
+            <div class="stat-box" style="border-left-color: #cf97e0;">
+                <div class="stat-title">Átlagos fájdalom-erősség</div>
+                <div class="stat-value">${totalHeadacheDays > 0 ? avgIntensity + " / 10" : "-"}</div>
+            </div>
+
+            <div class="stat-box" style="border-left-color: #ffb74d;">
+                <div class="stat-title">Összes fejfájással töltött idő</div>
+                <div class="stat-value">${totalHours} óra</div>
+            </div>
+
+            ${totalHeadacheDays > 0 ? `
+                <div style="margin-top:15px; font-size:12.5px; color:#5c506b;">
+                    <strong>Leggyakoribb kísérő tünetek:</strong>
+                    <ul style="padding-left:18px; margin-top:6px; line-height: 1.6;">
+                        <li>Hányinger/Hányás: ${symptomCounts.nausea} alkalom</li>
+                        <li>Fényérzékenység: ${symptomCounts.light} alkalom</li>
+                        <li>Hangérzékenység: ${symptomCounts.sound} alkalom</li>
+                        <li>Mozgásra romlás: ${symptomCounts.motion} alkalom</li>
+                    </ul>
+                </div>
+            ` : ''}
+        `;
+    };
+
+    window.showTab = (tab) => {
+        document.getElementById('tab-log').classList.toggle('hidden', tab !== 'log');
+        document.getElementById('tab-stats').classList.toggle('hidden', tab !== 'stats');
+        document.getElementById('btn-tab-log').classList.toggle('active', tab === 'log');
+        document.getElementById('btn-tab-stats').classList.toggle('active', tab === 'stats');
+    };
+
+    const today = new Date();
+    document.getElementById('headacheDate').valueAsDate = today;
+    document.getElementById('statsMonthSelect').value = today.toISOString().slice(0, 7);
 </script>
 </body>
 </html>
