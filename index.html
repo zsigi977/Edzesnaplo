@@ -6,14 +6,14 @@
     <title>FejfájásNapló Pro</title>
     
     <!-- Ikon beállítások (icon.png) -->
-    <link rel="icon" type="image/png" href="icon_2.png">
-    <link rel="apple-touch-icon" href="icon_2.png">
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="apple-touch-icon" href="icon.png">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="FejfájásNapló">
 
-    <!-- Szép, csajos, kerekded betűtípus (Poppins) -->
+    <!-- Betűtípus (Poppins) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -25,9 +25,8 @@
         }
 
         body { 
-            /* Háttérkép (hatter.png) lágy átmenetes réteggel letakarva */
             background: linear-gradient(135deg, rgba(252, 228, 236, 0.6) 0%, rgba(243, 229, 245, 0.6) 50%, rgba(232, 234, 246, 0.6) 100%), 
-                        url('hatter_2.png') center/cover no-repeat fixed;
+                        url('hatter.png') center/cover no-repeat fixed;
             margin: 0; padding: 12px; 
             display: flex; flex-direction: column; align-items: center; 
             min-height: 100vh; 
@@ -123,7 +122,16 @@
             background: rgba(255, 255, 255, 0.95);
         }
 
-        /* RADIO TOGGLE GOMBOK */
+        /* EGYSOROS DUAL INPUT (Vérnyomás + Pulzus) */
+        .dual-input-group {
+            display: flex;
+            gap: 10px;
+        }
+        .dual-input-group > div {
+            flex: 1;
+        }
+
+        /* TOGGLE GOMBOK */
         .status-toggle {
             display: flex;
             gap: 10px;
@@ -185,7 +193,7 @@
             font-weight: 600;
             font-size: 14px;
             color: #7e6b8f;
-            width: 42px;
+            width: 36px;
         }
 
         /* CHECKBOX-OK STÍLUSA */
@@ -239,7 +247,7 @@
         .btn-delete { background: none; border: none; color: #ff6b6b; cursor: pointer; font-size: 16px; padding: 4px; }
         .btn-edit { background: none; border: none; color: #8c7ae6; cursor: pointer; font-size: 16px; padding: 4px; margin-right: 4px; }
 
-        /* STATISZTIKAI KÁRTYÁK ÜVEGHATÁS */
+        /* STATISZTIKAI KÁRTYÁK */
         .stat-box {
             background: rgba(255, 255, 255, 0.65);
             backdrop-filter: blur(10px);
@@ -285,22 +293,34 @@
             <!-- Részletes kérdések -->
             <div id="headache-details" class="hidden">
                 
-                <label>Fájdalom erőssége (1-10)</label>
+                <label>Fájdalom erőssége (1-3)</label>
                 <div class="slider-container">
-                    <span id="emoji-display" class="emoji-display">😊</span>
-                    <input type="range" id="intensitySlider" min="1" max="10" value="1" oninput="updateIntensityDisplay(this.value)">
-                    <span id="intensityVal" class="intensity-val">1/10</span>
+                    <span id="emoji-display" class="emoji-display">😐</span>
+                    <input type="range" id="intensitySlider" min="1" max="3" value="1" oninput="updateIntensityDisplay(this.value)">
+                    <span id="intensityVal" class="intensity-val">1/3</span>
                 </div>
 
                 <label for="painType">Fájdalom jellege</label>
                 <select id="painType" onchange="checkCustomPainType(this.value)">
+                    <option value="Nyomó">Nyomó</option>
+                    <option value="Görcsös">Görcsös</option>
                     <option value="Lüktető">Lüktető</option>
-                    <option value="Tompa / Szorító">Tompa / Szorító</option>
-                    <option value="Hasogató">Hasogató</option>
-                    <option value="Éles / Szúró">Éles / Szúró</option>
+                    <option value="Hasító">Hasító</option>
+                    <option value="Feszítő">Feszítő</option>
                     <option value="Egyéb">Egyéb (Egyéni)</option>
                 </select>
                 <input type="text" id="customPainType" class="hidden" placeholder="Írd le a fájdalom jellegét...">
+
+                <div class="dual-input-group">
+                    <div>
+                        <label for="bloodPressureInput">Vérnyomás</label>
+                        <input type="text" id="bloodPressureInput" placeholder="pl. 120/80">
+                    </div>
+                    <div>
+                        <label for="pulseInput">Pulzus</label>
+                        <input type="number" id="pulseInput" placeholder="pl. 75">
+                    </div>
+                </div>
 
                 <label>Kísérő tünetek</label>
                 <div class="checkbox-group">
@@ -355,15 +375,21 @@
     let hasHeadache = false;
     let allLogs = {};
 
+    function formatDateToLocalString(d) {
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
     window.updateIntensityDisplay = (val) => {
-        document.getElementById('intensityVal').innerText = val + "/10";
+        val = parseInt(val);
+        document.getElementById('intensityVal').innerText = val + "/3";
         const emojiEl = document.getElementById('emoji-display');
         
-        if (val <= 2) emojiEl.innerText = "😊";
-        else if (val <= 4) emojiEl.innerText = "😐";
-        else if (val <= 6) emojiEl.innerText = "😣";
-        else if (val <= 8) emojiEl.innerText = "😫";
-        else emojiEl.innerText = "💀";
+        if (val === 1) emojiEl.innerText = "😐";
+        else if (val === 2) emojiEl.innerText = "😣";
+        else if (val === 3) emojiEl.innerText = "💀";
     };
 
     window.toggleHeadache = (status) => {
@@ -407,6 +433,8 @@
             
             entryData.intensity = parseInt(document.getElementById('intensitySlider').value);
             entryData.painType = (painTypeSelect === "Egyéb" && customPain.trim() !== "") ? customPain : painTypeSelect;
+            entryData.bloodPressure = document.getElementById('bloodPressureInput').value.trim();
+            entryData.pulse = document.getElementById('pulseInput').value.trim();
             entryData.symptoms = {
                 nausea: document.getElementById('symNausea').checked,
                 light: document.getElementById('symLight').checked,
@@ -424,13 +452,15 @@
     };
 
     function resetForm() {
-        document.getElementById('headacheDate').valueAsDate = new Date();
+        document.getElementById('headacheDate').value = formatDateToLocalString(new Date());
         toggleHeadache(false);
         document.getElementById('intensitySlider').value = 1;
         updateIntensityDisplay(1);
         document.getElementById('painType').selectedIndex = 0;
         document.getElementById('customPainType').value = "";
         document.getElementById('customPainType').classList.add('hidden');
+        document.getElementById('bloodPressureInput').value = "";
+        document.getElementById('pulseInput').value = "";
         document.getElementById('symNausea').checked = false;
         document.getElementById('symLight').checked = false;
         document.getElementById('symSound').checked = false;
@@ -443,12 +473,12 @@
     function autoFillMissingDays() {
         if (!allLogs) return;
         const today = new Date();
-        const startDate = new Date(today.getFullYear(), 8, 1); // 8-as hónap = Szeptember
+        const startDate = new Date(today.getFullYear(), 8, 1);
 
         let curr = new Date(startDate);
 
         while (curr < today) {
-            const dateStr = curr.toISOString().split('T')[0];
+            const dateStr = formatDateToLocalString(curr);
 
             if (allLogs[dateStr] === undefined) {
                 set(ref(db, 'headache_logs/' + dateStr), {
@@ -485,7 +515,9 @@
             const card = document.createElement('div');
             card.className = "card";
 
-            const dayName = napok[new Date(date).getDay()];
+            const parts = date.split('-');
+            const dateObj = new Date(parts[0], parts[1] - 1, parts[2]);
+            const dayName = napok[dateObj.getDay()];
 
             if (!item.hasHeadache) {
                 card.innerHTML = `
@@ -506,10 +538,20 @@
                     if (item.symptoms.motion) symptomsList.push("Mozgásra romlik");
                 }
 
+                // Vérnyomás és pulzus összefűzött megjelenítése
+                let bpPulseStr = "";
+                if (item.bloodPressure && item.pulse) {
+                    bpPulseStr = `${item.bloodPressure} mmHg (${item.pulse} bpm)`;
+                } else if (item.bloodPressure) {
+                    bpPulseStr = `${item.bloodPressure} mmHg`;
+                } else if (item.pulse) {
+                    bpPulseStr = `${item.pulse} bpm`;
+                }
+
                 card.innerHTML = `
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
                         <span><strong style="color:#4a3b56;">${date}</strong> <small style="color:#8e7c93;">(${dayName})</small></span>
-                        <span style="color:#d81b60; font-weight:600; font-size:13.5px;">🤕 Fájt (${item.intensity}/10)</span>
+                        <span style="color:#d81b60; font-weight:600; font-size:13.5px;">🤕 Fájt (${item.intensity || 1}/3)</span>
                         <div>
                             <button class="btn-edit" onclick="editEntry('${date}')">✏️</button>
                             <button class="btn-delete" onclick="deleteEntry('${date}')">🗑️</button>
@@ -517,6 +559,7 @@
                     </div>
                     <div style="font-size:12.5px; color:#5c506b; line-height: 1.5;">
                         <div><strong>Jelleg:</strong> ${item.painType || 'Nincs megadva'}</div>
+                        ${bpPulseStr ? `<div><strong>Vérnyomás / Pulzus:</strong> ${bpPulseStr}</div>` : ''}
                         ${symptomsList.length ? `<div><strong>Tünetek:</strong> ${symptomsList.join(', ')}</div>` : ''}
                         ${item.medication ? `<div><strong>Gyógyszer:</strong> ${item.medication}</div>` : ''}
                         ${item.duration ? `<div><strong>Időtartam:</strong> ${item.duration} óra</div>` : ''}
@@ -556,8 +599,9 @@
             
             const painSelect = document.getElementById('painType');
             const customInput = document.getElementById('customPainType');
+            const defaultTypes = ["Nyomó", "Görcsös", "Lüktető", "Hasító", "Feszítő"];
             
-            if (["Lüktető", "Tompa / Szorító", "Hasogató", "Éles / Szúró"].includes(item.painType)) {
+            if (defaultTypes.includes(item.painType)) {
                 painSelect.value = item.painType;
                 customInput.classList.add('hidden');
             } else {
@@ -565,6 +609,9 @@
                 customInput.value = item.painType || "";
                 customInput.classList.remove('hidden');
             }
+
+            document.getElementById('bloodPressureInput').value = item.bloodPressure || "";
+            document.getElementById('pulseInput').value = item.pulse || "";
 
             if (item.symptoms) {
                 document.getElementById('symNausea').checked = !!item.symptoms.nausea;
@@ -581,6 +628,8 @@
             document.getElementById('painType').selectedIndex = 0;
             document.getElementById('customPainType').value = "";
             document.getElementById('customPainType').classList.add('hidden');
+            document.getElementById('bloodPressureInput').value = "";
+            document.getElementById('pulseInput').value = "";
             document.getElementById('symNausea').checked = false;
             document.getElementById('symLight').checked = false;
             document.getElementById('symSound').checked = false;
@@ -644,7 +693,7 @@
 
             <div class="stat-box" style="border-left-color: #cf97e0;">
                 <div class="stat-title">Átlagos fájdalom-erősség</div>
-                <div class="stat-value">${totalHeadacheDays > 0 ? avgIntensity + " / 10" : "-"}</div>
+                <div class="stat-value">${totalHeadacheDays > 0 ? avgIntensity + " / 3" : "-"}</div>
             </div>
 
             <div class="stat-box" style="border-left-color: #ffb74d;">
@@ -674,8 +723,8 @@
     };
 
     const today = new Date();
-    document.getElementById('headacheDate').valueAsDate = today;
-    document.getElementById('statsMonthSelect').value = today.toISOString().slice(0, 7);
+    document.getElementById('headacheDate').value = formatDateToLocalString(today);
+    document.getElementById('statsMonthSelect').value = formatDateToLocalString(today).slice(0, 7);
 </script>
 </body>
 </html>
