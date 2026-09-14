@@ -317,6 +317,14 @@
                 </select>
                 <input type="text" id="customPainType" class="hidden" placeholder="Írd le a fájdalom jellegét...">
 
+                <label for="weatherFront">Volt front?</label>
+                <select id="weatherFront">
+                    <option value="Nincs" selected>Nincs</option>
+                    <option value="Hidegfront">Hidegfront</option>
+                    <option value="Melegfront">Melegfront</option>
+                    <option value="Kettős front">Kettős front</option>
+                </select>
+
                 <label>Koffein fogyasztása (kávé, energiaital, tea stb.)</label>
                 <div class="status-toggle">
                     <div id="btn-caffeine-no" class="status-btn active-no" onclick="toggleCaffeine(false)">NEM 🚫</div>
@@ -460,6 +468,7 @@
             
             entryData.intensity = parseInt(document.getElementById('intensitySlider').value);
             entryData.painType = (painTypeSelect === "Egyéb" && customPain.trim() !== "") ? customPain : painTypeSelect;
+            entryData.weatherFront = document.getElementById('weatherFront').value;
             entryData.caffeine = hadCaffeine;
             entryData.bloodPressure = document.getElementById('bloodPressureInput').value.trim();
             entryData.pulse = document.getElementById('pulseInput').value.trim();
@@ -488,6 +497,7 @@
         document.getElementById('painType').selectedIndex = 0;
         document.getElementById('customPainType').value = "";
         document.getElementById('customPainType').classList.add('hidden');
+        document.getElementById('weatherFront').value = "Nincs";
         document.getElementById('bloodPressureInput').value = "";
         document.getElementById('pulseInput').value = "";
         document.getElementById('symNausea').checked = false;
@@ -588,6 +598,7 @@
                     </div>
                     <div style="font-size:12.5px; color:#5c506b; line-height: 1.5;">
                         <div><strong>Jelleg:</strong> ${item.painType || 'Nincs megadva'}</div>
+                        <div><strong>Front:</strong> ${item.weatherFront || 'Nincs'}</div>
                         <div><strong>Koffein:</strong> ${item.caffeine ? '☕ Igen' : '🚫 Nem'}</div>
                         ${bpPulseStr ? `<div><strong>Vérnyomás / Pulzus:</strong> ${bpPulseStr}</div>` : ''}
                         ${symptomsList.length ? `<div><strong>Tünetek:</strong> ${symptomsList.join(', ')}</div>` : ''}
@@ -641,6 +652,7 @@
                 customInput.classList.remove('hidden');
             }
 
+            document.getElementById('weatherFront').value = item.weatherFront || "Nincs";
             document.getElementById('bloodPressureInput').value = item.bloodPressure || "";
             document.getElementById('pulseInput').value = item.pulse || "";
 
@@ -660,6 +672,7 @@
             document.getElementById('painType').selectedIndex = 0;
             document.getElementById('customPainType').value = "";
             document.getElementById('customPainType').classList.add('hidden');
+            document.getElementById('weatherFront').value = "Nincs";
             document.getElementById('bloodPressureInput').value = "";
             document.getElementById('pulseInput').value = "";
             document.getElementById('symNausea').checked = false;
